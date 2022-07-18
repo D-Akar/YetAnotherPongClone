@@ -45,10 +45,10 @@ function start() {
 }
 
 function gameReset() {
-    var ballDirection = 0;
-    var ballSpread = 0;
-    var gameStarted = 0;
-    var direction = 0;
+    ballDirection = 0;
+    ballSpread = 0;
+    gameStarted = 0;
+    direction = 0;
     ball.style.left = "290px";
     ball.style.top = "190px";
     alert("you lose");
@@ -58,6 +58,7 @@ function gameReset() {
 setInterval(function() {
     var ballLeft = parseInt(window.getComputedStyle(ball).getPropertyValue("left"));
     var ballTop = parseInt(window.getComputedStyle(ball).getPropertyValue("top"));
+    var ballBottom = ballTop + 20;
 
     var paddle1Right = parseInt(window.getComputedStyle(paddle1).getPropertyValue("left")) + 15;
     var paddle1Top = parseInt(window.getComputedStyle(paddle1).getPropertyValue("top"));
@@ -68,30 +69,41 @@ setInterval(function() {
     //MOVEMENT LOGIC
     if(direction == 1) 
     {
-        if(ballLeft <= 35 && ballLeft >= 25 && ballTop>paddle1Top && ballTop < paddle1Top + 80) {
+        if(ballLeft <= paddle1Right && ballLeft >= 25 && ballBottom>=paddle1Top && ballTop <= paddle1Top + 80) {
             direction = 2;
             ball.style.left = (ballLeft + 2) + "px";
+            var vertDirection = Math.floor(Math.random()*3)-1;
+            ballSpread = Math.floor(Math.random()*3) * vertDirection;
         }
         else if(ballLeft<=0) {
             gameReset();
             document.location.reload(true);
         }
         else {
+            if(ballTop<=0 || ballTop + 20 >= 400) {
+                ballSpread = -ballSpread;
+            }
             ball.style.left = (ballLeft - 2) + "px";
+            ball.style.top = (ballTop + ballSpread) + "px";
         } 
 
     }
     else if(direction == 2) {
-        if(ballLeft <= paddle2Left + 5 && ballLeft >= paddle2Left - 20 && ballTop>paddle2Top && ballTop < paddle2Top + 80) {
+        if(ballLeft <= paddle2Left + 5 && ballLeft >= paddle2Left - 20 && ballBottom>=paddle2Top && ballTop <= paddle2Top + 80) {
             direction = 1;
             ball.style.left = (ballLeft - 2) + "px";
+            var vertDirection = Math.floor(Math.random()*3)-1;
+            ballSpread = Math.floor(Math.random()*3) * vertDirection;
         }
         else if(ballLeft>=580) {
             gameReset();
-            document.location.reload(true);
         }
         else {
+            if(ballTop<=0 || ballTop + 20 >= 400) {
+                ballSpread = -ballSpread;
+            }
             ball.style.left = (ballLeft + 2) + "px";
+            ball.style.top = (ballTop + ballSpread) + "px";
         } 
     }
 }, 10);
